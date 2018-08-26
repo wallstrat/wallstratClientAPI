@@ -36,34 +36,34 @@ let exchangeCodes: Array<String>= ['gdax', 'bitstamp', 'gemini', 'hitbtc', 'huob
 
 clientAPI.get('/api/coins/:exchangecode', function(req, res) {
     
-	if(exchangeCodes.includes(exchangecode)){
-		 let code : ExchangeCodes = exchangeCodes[exchangecode.toUpperCase()];
-		 return new Map(JSON.parse(feed.getPrimeTokens(code)).map(e => [e.code, e.name]));
-	}
-	else{
+	// if(exchangeCodes.includes(req.params.exchangecode)){
+	// 	 let code : ExchangeCodes = <ExchangeCodes>ExchangeCodes[(req.params.exchangecode).toUpperCase()];
+	// 	 return new Map(JSON.parse(feed.getPrimeTokens(code)).map(e => [e.code, e.name]));
+	// }
+	// else{
 		
-	}
+	// }
 });
 clientAPI.get('/api/products/:exchangecode', function(req, res) {
     
-	if(exchangeCodes.includes(exchangecode)){
-		let code : ExchangeCodes = exchangeCodes[exchangecode.toUpperCase()];
-		const products = JSON.parse(feed.getPrimeProductsPairs(code)).reduce(function(map, e) {
-    		for(let pr of e.symbols){
-    			map[pr] = e.base_currency;
-    		}
-    		return map;
-		}, {});
-		return products;
+	// if(exchangeCodes.includes(req.params.exchangecode)){
+	// 	let code : ExchangeCodes = <ExchangeCodes>ExchangeCodes[(req.params.exchangecode).toUpperCase()];
+	// 	const products = JSON.parse(feed.getPrimeProductsPairs(code)).reduce(function(map, e) {
+ //    		for(let pr of e.symbols){
+ //    			map[pr] = e.base_currency;
+ //    		}
+ //    		return map;
+	// 	}, {});
+	// 	return products;
 
-	}
-	else{
+	// }
+	// else{
 		
-	}
+	// }
 });
 
 clientAPI.get('/api/orderbook/:exchangecode/:symbol', function(req, res) {
-	if(exchangeCodes.includes(exchangecode)){
+	if(exchangeCodes.includes(req.params.exchangecode)){
 		const query = {
 			exchange:req.params.exchangecode,
 	    	product_id:req.params.symbol
@@ -80,7 +80,7 @@ clientAPI.get('/api/orderbook/:exchangecode/:symbol', function(req, res) {
    
 });
 clientAPI.get('/api/trade/:exchangecode/:symbol', function(req, res) {
-	if(exchangeCodes.includes(exchangecode)){
+	if(exchangeCodes.includes(req.params.exchangecode)){
 		const query = {
 			exchange:req.params.exchangecode,
 	    	product_id:req.params.symbol
@@ -93,7 +93,7 @@ clientAPI.get('/api/trade/:exchangecode/:symbol', function(req, res) {
     
 });
 clientAPI.get('/api/bb/:exchangecode/:symbol', function(req, res) {
-	if(exchangeCodes.includes(exchangecode)){
+	if(exchangeCodes.includes(req.params.exchangecode)){
 		const query = {
 			exchange:req.params.exchangecode,
 	    	product_id:req.params.symbol
@@ -109,7 +109,7 @@ clientAPI.get('/api/bb/:exchangecode/:symbol', function(req, res) {
     
 });
 clientAPI.get('/api/ticker/:exchangecode/:symbol', function(req, res) {
-	if(exchangeCodes.includes(exchangecode)){
+	if(exchangeCodes.includes(req.params.exchangecode)){
 		const query = {
 			exchange:req.params.exchangecode,
 	    	product_id:req.params.symbol
@@ -125,7 +125,7 @@ clientAPI.get('/api/ticker/:exchangecode/:symbol', function(req, res) {
     
 });
 clientAPI.get('/api/ohlc/:exchangecode/:symbol', function(req, res) {
-	if(exchangeCodes.includes(exchangecode)){
+	if(exchangeCodes.includes(req.params.exchangecode)){
 		const query = {
 			exchange:req.params.exchangecode,
 	    	product_id:req.params.symbol
@@ -141,7 +141,7 @@ clientAPI.get('/api/ohlc/:exchangecode/:symbol', function(req, res) {
     
 });
 clientAPI.get('/api/pricechange/:exchangecode/:symbol', function(req, res) {
-    if(exchangeCodes.includes(exchangecode)){
+    if(exchangeCodes.includes(req.params.exchangecode)){
 		const query = {
 			exchange:req.params.exchangecode,
 	    	product_id:req.params.symbol
@@ -157,6 +157,6 @@ clientAPI.get('/api/pricechange/:exchangecode/:symbol', function(req, res) {
 });
 
 
-export { app };
+export { clientAPI };
 
 

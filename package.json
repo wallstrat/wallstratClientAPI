@@ -4,8 +4,8 @@
   "description": "Client for Cryptocurrency Market Data",
   "main": "index.js",
   "scripts": {
-    "test": "concurrently \"tsc -w\" \"nodemon dist/test.js\"",
-    "start":"concurrently \"mongod --config mongo.config\" \"tsc -w\" \"set UV_THREADPOOL_SIZE=13 && nodemon dist/app/dbserver/db.js\" \"dist/app/clientapi/clientAPI.js\""
+    "test": "concurrently \"mongod --config mongo.config\" \"nodemon dist/app/dbserver/db.js\" \"dist/app/clientapi/clientAPI.js\" \"nodemon dist/test/test.js\"",
+    "start": "concurrently \"mongod --config mongo.config\" \"tsc -w\" \"set UV_THREADPOOL_SIZE=13 && nodemon dist/app/dbserver/db.js\" \"dist/app/clientapi/clientAPI.js\""
   },
   "devDependencies": {
     "@types/core-js": "^2.5.0",
