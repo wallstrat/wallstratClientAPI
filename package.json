@@ -1,0 +1,27 @@
+{
+  "name": "wallstratclient",
+  "version": "1.0.0",
+  "description": "Client for Cryptocurrency Market Data",
+  "main": "index.js",
+  "scripts": {
+    "test": "concurrently \"tsc -w\" \"nodemon dist/test.js\"",
+    "start":"concurrently \"mongod --config mongo.config\" \"tsc -w\" \"set UV_THREADPOOL_SIZE=13 && nodemon dist/app/dbserver/db.js\" \"dist/app/clientapi/clientAPI.js\""
+  },
+  "devDependencies": {
+    "@types/core-js": "^2.5.0",
+    "@types/node": "^10.5.2",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "morgan": "^1.9.0",
+    "concurrently": "^3.5.1",
+    "nodemon": "^1.17.5",
+    "ts-node": "^5.0.1",
+    "typescript": "^2.7.2"
+  },
+  "author": "Alok Kumar Diwakar",
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^5.2.9",
+    "morgan": "^1.9.0"
+  }
+}
