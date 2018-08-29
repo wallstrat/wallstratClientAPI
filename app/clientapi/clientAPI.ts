@@ -35,31 +35,39 @@ let exchangeCodes: Array<String>= ['gdax', 'bitstamp', 'gemini', 'hitbtc', 'huob
 // API Calls 
 
 clientAPI.get('/api/coins/:exchangecode', function(req, res) {
+	
+	// console.log("base url ", req.url)
     
-	// if(exchangeCodes.includes(req.params.exchangecode)){
-	// 	 let code : ExchangeCodes = <ExchangeCodes>ExchangeCodes[(req.params.exchangecode).toUpperCase()];
-	// 	 return new Map(JSON.parse(feed.getPrimeTokens(code)).map(e => [e.code, e.name]));
-	// }
-	// else{
+	if(exchangeCodes.includes(req.params.exchangecode)){
+		 let code : ExchangeCodes = ExchangeCodes[<string>(req.params.exchangecode).toUpperCase()];
+		 const tokens = new Map(feed.getPrimeTokens(code).map<[string,string]>(e => [e.code, e.name]));
+		 console.log("coins " ,  tokens);
+		 return tokens;
+	}
+	else{
 		
-	// }
+	}
+	
 });
 clientAPI.get('/api/products/:exchangecode', function(req, res) {
     
-	// if(exchangeCodes.includes(req.params.exchangecode)){
-	// 	let code : ExchangeCodes = <ExchangeCodes>ExchangeCodes[(req.params.exchangecode).toUpperCase()];
-	// 	const products = JSON.parse(feed.getPrimeProductsPairs(code)).reduce(function(map, e) {
- //    		for(let pr of e.symbols){
- //    			map[pr] = e.base_currency;
- //    		}
- //    		return map;
-	// 	}, {});
-	// 	return products;
+	if(exchangeCodes.includes(req.params.exchangecode)){
+		 let code : ExchangeCodes = ExchangeCodes[<string>(req.params.exchangecode).toUpperCase()];
 
-	// }
-	// else{
+		 const products = feed.getPrimeProductsPairs(code).reduce(function(map, e) {
+    		for(let pr of e.symbols){
+    			map[pr] = e.base_currency;
+    		}
+    		return map;
+		}, {});
+
+		 console.log("products " ,  products);
+		 return products;
+	}
+	else{
 		
-	// }
+	}
+
 });
 
 clientAPI.get('/api/orderbook/:exchangecode/:symbol', function(req, res) {
