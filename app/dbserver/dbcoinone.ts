@@ -5,7 +5,7 @@ import { ExchangeCodes} from 'wallstrat';
 import {
 	
 	Tokens, ProductsPairs, TokenInfo, ProductsPairsInfo, OrderBook,
-	BestBidBestAsk, Ticker, Trade, HistoricalData, PriceChange, feed
+	BestBidBestAsk, Ticker, Trade, HistoricalData, PriceChange, feed, data_limit
 
 } from './db';
 
@@ -25,7 +25,7 @@ function syncOrderBook(){
 					$push:{
 						order_book:{
 							$each: [book], // data here  [ ] = default 
-							$slice: -3000 // last three thousands updates 
+							$slice: data_limit // last three thousands updates 
 						}
 					},
 					exchange:'coinone',
@@ -33,15 +33,18 @@ function syncOrderBook(){
 					level:2
 				};
 				const option = { upsert: true, new: true };
-				OrderBook.updateOne(
+				if(book){
+					OrderBook.updateOne(
    					query,
    					orderBook,
    					option,
    					function(error, success){
      					// console.log("error ", error) 
-     					console.log("success ", success) 
+     					//console.log("success ", success) 
    					}
 				)
+				}
+				
 				
 			});
 
@@ -64,22 +67,25 @@ function syncBestBidBestAsk(){
 					$push:{
 						bb:{
 							$each: [best_bid_best_ask], // data here  [ ] = default 
-							$slice: -3000 // last three thousands updates 
+							$slice: data_limit // last three thousands updates 
 						}
 					},
 					exchange:'coinone',
 					product_id:symbol
 				};
 				const option = { upsert: true, new: true };
-				BestBidBestAsk.updateOne(
+				if(best_bid_best_ask){
+					BestBidBestAsk.updateOne(
    					query,
    					best_bid_ask,
    					option,
    					function(error, success){
      					// console.log("error ", error) 
-     					console.log("success ", success) 
+     					//console.log("success ", success) 
    					}
 				)
+				}
+				
 				
 
 			});
@@ -101,22 +107,25 @@ function syncTicker(){
 					$push:{
 						ticker:{
 							$each: [tick], // data here  [ ] = default 
-							$slice: -3000 // last three thousands updates 
+							$slice: data_limit // last three thousands updates 
 						}
 					},
 					exchange:'coinone',
 					product_id:symbol
 				};
 				const option = { upsert: true, new: true };
-				Ticker.updateOne(
+				if(tick){
+					Ticker.updateOne(
    					query,
    					ticker_,
    					option,
    					function(error, success){
      					// console.log("error ", error) 
-     					console.log("success ", success) 
+     					//console.log("success ", success) 
    					}
 				)
+				}
+				
 				
 
 			});
@@ -138,22 +147,25 @@ function syncTrades(){
 					$push:{
 						trade:{
 							$each: [trades], // data here  [ ] = default 
-							$slice: -3000 // last three thousands updates 
+							$slice: data_limit // last three thousands updates 
 						}
 					},
 					exchange:'coinone',
 					product_id:symbol
 				};
 				const option = { upsert: true, new: true };
-				Trade.updateOne(
+				if(trades){
+					Trade.updateOne(
    					query,
    					trades_,
    					option,
    					function(error, success){
      					// console.log("error ", error) 
-     					console.log("success ", success) 
+     					//console.log("success ", success) 
    					}
 				)
+				}
+				
 				
 
 			});

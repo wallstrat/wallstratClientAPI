@@ -17,7 +17,7 @@ import {
 
 const clientAPI = express();
 dotenv.load({ path: '.env' });
-clientAPI.set('port', (process.env.PORT || 3000));
+clientAPI.set('port', (process.env.PORT || 2929));
 
 clientAPI.use(bodyParser.json());
 clientAPI.use(bodyParser.urlencoded({ extended: true }));
@@ -37,16 +37,17 @@ let exchangeCodes: Array<String>= ['gdax', 'bitstamp', 'gemini', 'hitbtc', 'huob
 clientAPI.get('/api/coins/:exchangecode', function(req, res) {
 	
 	// console.log("base url ", req.url)
-    
 	if(exchangeCodes.includes(req.params.exchangecode)){
 		 let code : ExchangeCodes = ExchangeCodes[<string>(req.params.exchangecode).toUpperCase()];
-		 const tokens = new Map(feed.getPrimeTokens(code).map<[string,string]>(e => [e.code, e.name]));
-		 console.log("coins " ,  tokens);
-		 return tokens;
+		 // const tokens = new Map(feed.getPrimeTokens(code).map<[string,string]>(e => [e.code, e.name]));
+		 // console.log("coins: " ,  tokens);
+		 res.send(feed.getTokens(code));
+		 // return tokens;
 	}
 	else{
 		
 	}
+	// res.send("Alok");
 	
 });
 clientAPI.get('/api/products/:exchangecode', function(req, res) {
@@ -54,15 +55,16 @@ clientAPI.get('/api/products/:exchangecode', function(req, res) {
 	if(exchangeCodes.includes(req.params.exchangecode)){
 		 let code : ExchangeCodes = ExchangeCodes[<string>(req.params.exchangecode).toUpperCase()];
 
-		 const products = feed.getPrimeProductsPairs(code).reduce(function(map, e) {
-    		for(let pr of e.symbols){
-    			map[pr] = e.base_currency;
-    		}
-    		return map;
-		}, {});
+		//  const products = feed.getPrimeProductsPairs(code).reduce(function(map, e) {
+  //   		for(let pr of e.symbols){
+  //   			map[pr] = e.base_currency;
+  //   		}
+  //   		return map;
+		// }, {});
 
-		 console.log("products " ,  products);
-		 return products;
+		//  // console.log("products " ,  products);
+		//  return products;
+		 res.send(feed.getProductsPairs(code));
 	}
 	else{
 		
@@ -76,8 +78,10 @@ clientAPI.get('/api/orderbook/:exchangecode/:symbol', function(req, res) {
 			exchange:req.params.exchangecode,
 	    	product_id:req.params.symbol
 		}
-		 OrderBook.findOne(query, function (err, doc) {
-  			console.log("doc ", JSON.stringify(doc))
+		 OrderBook.findOne(query, {order_book:1}, function (err, doc) {
+		 	res.send(doc['order_book'][doc['order_book'].length -1]);
+		 	// return doc;
+  			// console.log("doc ", JSON.stringify(doc))
 		})
 
 	}
@@ -93,8 +97,10 @@ clientAPI.get('/api/trade/:exchangecode/:symbol', function(req, res) {
 			exchange:req.params.exchangecode,
 	    	product_id:req.params.symbol
 		}
-		 Trade.findOne(query, function (err, doc) {
-  			console.log("doc ", JSON.stringify(doc))
+		 Trade.findOne(query, {trade:1}, function (err, doc) {
+		 	res.send(doc['trade'][doc['trade'].length -1]);
+		 	// return doc;
+  			// console.log("doc ", JSON.stringify(doc))
 		})
 
 	}
@@ -106,8 +112,10 @@ clientAPI.get('/api/bb/:exchangecode/:symbol', function(req, res) {
 			exchange:req.params.exchangecode,
 	    	product_id:req.params.symbol
 		}
-		 BestBidBestAsk.findOne(query, function (err, doc) {
-  			console.log("doc ", JSON.stringify(doc))
+		 BestBidBestAsk.findOne(query,{bb:1} ,function (err, doc) {
+		 	res.send(doc['bb'][doc['bb'].length -1]);
+		 	// return doc;
+  			// console.log("doc ", JSON.stringify(doc))
 		})
 
 	}
@@ -122,8 +130,10 @@ clientAPI.get('/api/ticker/:exchangecode/:symbol', function(req, res) {
 			exchange:req.params.exchangecode,
 	    	product_id:req.params.symbol
 		}
-		 Ticker.findOne(query, function (err, doc) {
-  			console.log("doc ", JSON.stringify(doc))
+		Ticker.findOne(query, {ticker:1},function (err, doc) {
+		 	// console.log("sending ticker ", JSON.stringify(doc['ticker'][doc['ticker'].length -1]))
+		 	res.send(doc['ticker'][doc['ticker'].length -1]);
+		 	// return doc;
 		})
 
 	}
@@ -133,29 +143,36 @@ clientAPI.get('/api/ticker/:exchangecode/:symbol', function(req, res) {
     
 });
 clientAPI.get('/api/ohlc/:exchangecode/:symbol', function(req, res) {
+	
 	if(exchangeCodes.includes(req.params.exchangecode)){
 		const query = {
 			exchange:req.params.exchangecode,
-	    	product_id:req.params.symbol
+	    	product_id:req.params.symbol,
+	    	interval:req.query.interval,
+			scale:req.query.scale
 		}
-		 HistoricalData.findOne(query, function (err, doc) {
-  			console.log("doc ", JSON.stringify(doc))
+		HistoricalData.findOne(query, {rates:1},function (err, doc) {
+			res.send(doc['rates'][doc['rates'].length -1])
+		 	// return doc;
+  			// console.log("rates ", JSON.stringify(doc))
 		})
 
 	}
 	else{
 
-	}
-    
+	}  
 });
+//localhost:2929/api/pricechange/gdax/BTC-USD
 clientAPI.get('/api/pricechange/:exchangecode/:symbol', function(req, res) {
     if(exchangeCodes.includes(req.params.exchangecode)){
 		const query = {
 			exchange:req.params.exchangecode,
 	    	product_id:req.params.symbol
 		}
-		 PriceChange.findOne(query, function (err, doc) {
-  			console.log("doc ", JSON.stringify(doc))
+		PriceChange.findOne(query, {change:1}, function (err, doc) {
+			res.send(doc['change'][doc['change'].length -1]);
+		 	// return doc;
+  			// console.log("change ", JSON.stringify(doc))
 		})
 
 	}

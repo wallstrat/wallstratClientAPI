@@ -81,17 +81,19 @@ exports.syncTrade = function(){
 exports.syncOHLC = function(){
 
     gdaxdb.syncOHLC();
-    geminidb.syncOHLC();
-    hitbtcdb.syncOHLC();
-    krakendb.syncOHLC();
+    // geminidb.syncOHLC();
+    // hitbtcdb.syncOHLC();
+    // krakendb.syncOHLC();
+    
     // kucoindb.syncOHLC();
     // lunodb.syncOHLC();
-    binancedb.syncOHLC();
-    okcoindb.syncOHLC();
-    bitfinexdb.syncOHLC();
-    bitrexdb.syncOHLC();
-    coinonedb.syncOHLC();
-    bitstampdb.syncOHLC();
+    
+    // binancedb.syncOHLC();
+    // okcoindb.syncOHLC();
+    // bitfinexdb.syncOHLC();
+    // bitrexdb.syncOHLC();
+    // coinonedb.syncOHLC();
+    // bitstampdb.syncOHLC();
 
 }
 exports.syncPriceChange = function(){

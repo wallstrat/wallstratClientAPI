@@ -5,7 +5,7 @@ import { ExchangeCodes} from 'wallstrat';
 import {
 	
 	Tokens, ProductsPairs, TokenInfo, ProductsPairsInfo, OrderBook,
-	BestBidBestAsk, Ticker, Trade, HistoricalData, PriceChange, feed
+	BestBidBestAsk, Ticker, Trade, HistoricalData, PriceChange, feed, data_limit
 
 } from './db';
 
@@ -25,7 +25,7 @@ function syncOrderBook(){
 					$push:{
 						order_book:{
 							$each: [book], // data here  [ ] = default 
-							$slice: -3000 // last three thousands updates 
+							$slice: data_limit // last three thousands updates 
 						}
 					},
 					exchange:'gdax',
@@ -33,15 +33,18 @@ function syncOrderBook(){
 					level:2
 				};
 				const option = { upsert: true, new: true };
-				OrderBook.updateOne(
+				if(book){
+					OrderBook.updateOne(
    					query,
    					orderBook,
    					option,
    					function(error, success){
      					// console.log("error ", error) 
-     					console.log("success ", success) 
+     					//console.log("success ", success) 
    					}
 				)
+				}
+				
 				// OrderBook.findOne(query, function (err, doc) {
   		// 			// console.log("doc ", JSON.stringify(doc))
 				// })
@@ -66,22 +69,25 @@ function syncBestBidBestAsk(){
 					$push:{
 						bb:{
 							$each: [best_bid_best_ask], // data here  [ ] = default 
-							$slice: -3000 // last three thousands updates 
+							$slice: data_limit // last three thousands updates 
 						}
 					},
 					exchange:'gdax',
 					product_id:symbol
 				};
 				const option = { upsert: true, new: true };
-				BestBidBestAsk.updateOne(
-   					query,
-   					best_bid_ask,
-   					option,
-   					function(error, success){
-     					// console.log("error ", error) 
-     					console.log("success ", success) 
-   					}
-				)
+				if(best_bid_best_ask){
+					BestBidBestAsk.updateOne(
+   						query,
+   						best_bid_ask,
+   						option,
+   						function(error, success){
+     						// console.log("error ", error) 
+     						//console.log("success ", success) 
+   						}
+					)
+				}
+				
 				// BestBidBestAsk.findOne(query, function (err, doc) {
   		// 			// console.log("doc ", JSON.stringify(doc))
 				// })
@@ -105,22 +111,25 @@ function syncTicker(){
 					$push:{
 						ticker:{
 							$each: [tick], // data here  [ ] = default 
-							$slice: -3000 // last three thousands updates 
+							$slice: data_limit // last three thousands updates 
 						}
 					},
 					exchange:'gdax',
 					product_id:symbol
 				};
 				const option = { upsert: true, new: true };
-				Ticker.updateOne(
-   					query,
-   					ticker_,
-   					option,
-   					function(error, success){
-     					// console.log("error ", error) 
-     					console.log("success ", success) 
-   					}
-				)
+				if(tick){
+					Ticker.updateOne(
+   						query,
+   						ticker_,
+   						option,
+   						function(error, success){
+     						// console.log("error ", error) 
+     						//console.log("success ", success) 
+   						}
+					)
+				}
+				
 				// Ticker.findOne(query, function (err, doc) {
   		// 			// console.log("doc ", JSON.stringify(doc))
 				// })
@@ -144,22 +153,25 @@ function syncTrades(){
 					$push:{
 						trade:{
 							$each: [trades], // data here  [ ] = default 
-							$slice: -3000 // last three thousands updates 
+							$slice: data_limit // last three thousands updates 
 						}
 					},
 					exchange:'gdax',
 					product_id:symbol
 				};
 				const option = { upsert: true, new: true };
-				Trade.updateOne(
+				if(trades){
+					Trade.updateOne(
    					query,
    					trades_,
    					option,
    					function(error, success){
      					// console.log("error ", error) 
-     					console.log("success ", success) 
+     					//console.log("success ", success) 
    					}
 				)
+				}
+				
 				// Trade.findOne(query, function (err, doc) {
   		// 			// console.log("doc ", JSON.stringify(doc))
 				// })
@@ -167,18 +179,18 @@ function syncTrades(){
 			});
 		}
 	}
-	setTimeout(syncTrades, 60000*30); // 0.5 hour 
+	setTimeout(syncTrades, 60000*30); // 3o minutes 
 }
 function syncOHLC(){
 
 	let sTScale_day:Date = new Date(), eTScale_day:Date = new Date();
-	sTScale_day.setMonth(eTScale_day.getMonth() - 6); // interval - 6 monts 
+	sTScale_day.setMonth(sTScale_day.getMonth() - 6); // interval - 6 months 
 
 	let sTScale_hour:Date = new Date(), eTScale_hour:Date = new Date();
-	sTScale_hour.setDate(eTScale_hour.getDate() - 7); // interval - 7 days
+	sTScale_hour.setDate(sTScale_hour.getDate() - 7); // interval - 7 days
 
 	let sTScale_minute:Date = new Date(), eTScale_minute:Date = new Date();
-	sTScale_minute.setHours(eTScale_minute.getHours() - 4); // interval - 4 hours 
+	sTScale_minute.setHours(sTScale_minute.getHours() - 4); // interval - 4 hours 
 
 	for(let pr of (feed.getProductsPairs(ExchangeCodes.GDAX)) ){
 		for(let symbol of pr.symbols){
@@ -189,13 +201,15 @@ function syncOHLC(){
 
 				const query = {
 					exchange:'gdax',
-					product_id:symbol
+					product_id:symbol,
+					interval:'6M',
+					scale:'1D'
 				}
 				const rates_ = {
 					$push:{
 						rates:{
 							$each: [past_rates], // data here  [ ] = default 
-							$slice: -3000 // last three thousands updates 
+							$slice: data_limit // last three thousands updates 
 						}
 					},
 					exchange:'gdax',
@@ -205,15 +219,18 @@ function syncOHLC(){
 
 				};
 				const option = { upsert: true, new: true };
-				HistoricalData.updateOne(
-   					query,
-   					rates_,
-   					option,
-   					function(error, success){
-     					// console.log("error ", error) 
-     					console.log("success ", success) 
-   					}
-				)
+				if(past_rates){
+					HistoricalData.updateOne(
+   						query,
+   						rates_,
+   						option,
+   						function(error, success){
+     						// console.log("error ", error) 
+     						//console.log("success ", success) 
+   						}
+					)
+				}
+				
 				// HistoricalData.findOne(query, function (err, doc) {
   		// 			// console.log("doc ", JSON.stringify(doc))
 				// })
@@ -225,13 +242,15 @@ function syncOHLC(){
 
 				const query = {
 					exchange:'gdax',
-					product_id:symbol
+					product_id:symbol,
+					interval:'7D',
+					scale:'1H'
 				}
 				const rates_ = {
 					$push:{
 						rates:{
 							$each: [past_rates], // data here  [ ] = default 
-							$slice: -3000 // last three thousands updates 
+							$slice: data_limit // last three thousands updates 
 						}
 					},
 					exchange:'gdax',
@@ -241,15 +260,18 @@ function syncOHLC(){
 
 				};
 				const option = { upsert: true, new: true };
-				HistoricalData.updateOne(
+				if(past_rates){
+					HistoricalData.updateOne(
    					query,
    					rates_,
    					option,
    					function(error, success){
      					// console.log("error ", error) 
-     					console.log("success ", success) 
+     					//console.log("success ", success) 
    					}
 				)
+				}
+				
 				
 
 			});
@@ -258,13 +280,15 @@ function syncOHLC(){
 
 				const query = {
 					exchange:'gdax',
-					product_id:symbol
+					product_id:symbol,
+					interval:'4H',
+					scale:'1m'
 				}
 				const rates_ = {
 					$push:{
 						rates:{
 							$each: [past_rates], // data here  [ ] = default 
-							$slice: -3000 // last three thousands updates 
+							$slice: data_limit // last three thousands updates 
 						}
 					},
 					exchange:'gdax',
@@ -274,21 +298,24 @@ function syncOHLC(){
 
 				};
 				const option = { upsert: true, new: true };
-				HistoricalData.updateOne(
+				if(past_rates){
+					HistoricalData.updateOne(
    					query,
    					rates_,
    					option,
    					function(error, success){
      					// console.log("error ", error) 
-     					console.log("success ", success) 
+     					//console.log("success ", success) 
    					}
-				)
+				)	
+				}
+				
 
 			});
 
 		}
 	}
-	setTimeout(syncOHLC, 60000*30); // 0.5 hour 
+	setTimeout(syncOHLC, 60000*30); // 5 minutes 
 }
 function syncPriceChange(){
 	
@@ -304,26 +331,30 @@ function syncPriceChange(){
 					exchange:'gdax',
 					product_id:symbol
 				}
-				const best_bid_ask = {
+				const change_ = {
 					$push:{
 						change:{
 							$each: [change], // data here  [ ] = default 
-							$slice: -3000 // last three thousands updates 
+							$slice: data_limit // last three thousands updates 
 						}
 					},
 					exchange:'gdax',
 					product_id:symbol
 				};
 				const option = { upsert: true, new: true };
-				PriceChange.updateOne(
+				if(change){
+					// console.log("change sdjfns", change);
+					PriceChange.updateOne(
    					query,
-   					best_bid_ask,
+   					change_,
    					option,
    					function(error, success){
      					// console.log("error ", error) 
-     					console.log("success ", success) 
+     					//console.log("success ", success) 
    					}
 				)
+				}
+				
 				// PriceChange.findOne(query, function (err, doc) {
   		// 			// console.log("doc ", JSON.stringify(doc))
 				// })
@@ -331,7 +362,7 @@ function syncPriceChange(){
 			});
 		}
 	}
-	setTimeout(syncPriceChange, 60000*30); // 0.5 hour 	
+	setTimeout(syncPriceChange, 60000*30); // 1 minutes  	
 }
 
 exports.syncOrderBook = syncOrderBook;   // module.exports.syncOrder = syncOrder; -- both are equivalent

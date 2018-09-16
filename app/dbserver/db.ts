@@ -17,14 +17,10 @@ mongoose.connect("mongodb://localhost:1717/crypto_marketdata", { useNewUrlParser
 	
 }).catch(err => console.error('Connection Error ', err));
 
+export const data_limit = -3000;
+
 /** Feed Handler */
 export const feed = new MarketPublicFeed()
-
-
-
-
-
-
 
 
 /**Token*/
