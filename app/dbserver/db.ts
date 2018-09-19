@@ -10,14 +10,16 @@ process.env.UV_THREADPOOL_SIZE = String(13); // in linux
 
 
 var sync = require('./sync');
+var dbConnectionString = "mongodb://hemantm:Test%40123@cluster0-shard-00-00-gxwu9.mongodb.net:27017,cluster0-shard-00-01-gxwu9.mongodb.net:27017,cluster0-shard-00-02-gxwu9.mongodb.net:27017/crypto_marketdata?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true"
+// var dbConnectionString = "mongodb://localhost:1717/crypto_marketdata";
 
-mongoose.connect("mongodb://localhost:1717/crypto_marketdata", { useNewUrlParser: true, keepAlive: true })
+mongoose.connect(dbConnectionString, { useNewUrlParser: true, keepAlive: true })
 .then(() => {
 	console.log('Connected to Mongo!')
 	
 }).catch(err => console.error('Connection Error ', err));
 
-export const data_limit = -3000;
+export const data_limit = -100;
 
 /** Feed Handler */
 export const feed = new MarketPublicFeed()
@@ -143,10 +145,10 @@ export const PriceChange = mongoose.model('priceChange', priceChangeSchema);
 
 
 /** Sync Order, bb, ticker, trade, ohlc, pricechange to db*/ 
-// sync.syncOrders();
-// sync.syncBestBidAsk();
-// sync.syncTicker();
-// sync.syncTrade();
-// sync.syncOHLC();
-// sync.syncPriceChange();
+sync.syncOrders();
+sync.syncBestBidAsk();
+sync.syncTicker();
+sync.syncTrade();
+sync.syncOHLC();
+sync.syncPriceChange();
 
