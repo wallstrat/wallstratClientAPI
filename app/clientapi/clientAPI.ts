@@ -18,14 +18,14 @@ import {
 const clientAPI = express();
 dotenv.load({ path: '.env' });
 clientAPI.set('port', (process.env.PORT || 2929));
-
+clientAPI.set('host', "0.0.0.0");
 clientAPI.use(bodyParser.json());
 clientAPI.use(bodyParser.urlencoded({ extended: true }));
 
 clientAPI.use(morgan('dev'));
 
 
-clientAPI.listen(clientAPI.get('port'),"0.0.0.0", () => {
+clientAPI.listen(clientAPI.get('port'), clientAPI.get('host'), () => {
 	console.log('Client API listening on port  ', clientAPI.get('port'));
 });
 
