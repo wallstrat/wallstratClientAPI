@@ -147,10 +147,10 @@ export const PriceChange = mongoose.model('priceChange', priceChangeSchema);
 
 
 /** Sync Order, bb, ticker, trade, ohlc, pricechange to db*/ 
-sync.syncOrders();
-sync.syncBestBidAsk();
-sync.syncTicker();
-sync.syncTrade();
-sync.syncOHLC();
-sync.syncPriceChange();
+// sync.syncOrders();
+// sync.syncBestBidAsk();
+// sync.syncTicker();
+// sync.syncTrade();
+// sync.syncOHLC();
+// sync.syncPriceChange();
 
