@@ -19,7 +19,7 @@ mongoose.connect(dbConnectionString, { useNewUrlParser: true, keepAlive: true })
 	
 }).catch(err => console.error('Connection Error ', err));
 
-export const data_limit = -100;
+export const data_limit = -2;
 
 /** Feed Handler */
 export const feed = new MarketPublicFeed()
