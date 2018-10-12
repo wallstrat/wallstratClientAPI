@@ -34,7 +34,7 @@ let exchangeCodes: Array<String>= ['gdax', 'bitstamp', 'gemini', 'hitbtc', 'huob
 
 // API Calls 
 
-clientAPI.get('/api/coins/:exchangecode', function(req, res) {
+clientAPI.get('/v1/coins/:exchangecode', function(req, res) {
 	
 	// console.log("base url ", req.url)
 	if(exchangeCodes.includes(req.params.exchangecode)){
@@ -56,7 +56,7 @@ clientAPI.get('/api/coins/:exchangecode', function(req, res) {
 	// res.send("Alok");
 	
 });
-clientAPI.get('/api/products/:exchangecode', function(req, res) {
+clientAPI.get('/v1/products/:exchangecode', function(req, res) {
     
 	if(exchangeCodes.includes(req.params.exchangecode)){
 		 let code : ExchangeCodes = ExchangeCodes[<string>(req.params.exchangecode).toUpperCase()];
@@ -84,7 +84,7 @@ clientAPI.get('/api/products/:exchangecode', function(req, res) {
 
 });
 
-clientAPI.get('/api/orderbook/:exchangecode/:symbol', function(req, res) {
+clientAPI.get('/v1/orderbook/:exchangecode/:symbol', function(req, res) {
 	if(exchangeCodes.includes(req.params.exchangecode)){
 		const query = {
 			exchange:req.params.exchangecode,
@@ -110,7 +110,7 @@ clientAPI.get('/api/orderbook/:exchangecode/:symbol', function(req, res) {
 	
    
 });
-clientAPI.get('/api/trade/:exchangecode/:symbol', function(req, res) {
+clientAPI.get('/v1/trade/:exchangecode/:symbol', function(req, res) {
 	if(exchangeCodes.includes(req.params.exchangecode)){
 		const query = {
 			exchange:req.params.exchangecode,
@@ -132,7 +132,7 @@ clientAPI.get('/api/trade/:exchangecode/:symbol', function(req, res) {
 	}
     
 });
-clientAPI.get('/api/bb/:exchangecode/:symbol', function(req, res) {
+clientAPI.get('/v1/bb/:exchangecode/:symbol', function(req, res) {
 	if(exchangeCodes.includes(req.params.exchangecode)){
 		const query = {
 			exchange:req.params.exchangecode,
@@ -157,7 +157,7 @@ clientAPI.get('/api/bb/:exchangecode/:symbol', function(req, res) {
 	}
     
 });
-clientAPI.get('/api/ticker/:exchangecode/:symbol', function(req, res) {
+clientAPI.get('/v1/ticker/:exchangecode/:symbol', function(req, res) {
 	if(exchangeCodes.includes(req.params.exchangecode)){
 		const query = {
 			exchange:req.params.exchangecode,
@@ -182,7 +182,7 @@ clientAPI.get('/api/ticker/:exchangecode/:symbol', function(req, res) {
 	}
     
 });
-clientAPI.get('/api/ohlc/:exchangecode/:symbol', function(req, res) {
+clientAPI.get('/v1/ohlc/:exchangecode/:symbol', function(req, res) {
 	
 	if(exchangeCodes.includes(req.params.exchangecode)){
 		const query = {
@@ -210,7 +210,7 @@ clientAPI.get('/api/ohlc/:exchangecode/:symbol', function(req, res) {
 	}  
 });
 //localhost:2929/api/pricechange/gdax/BTC-USD
-clientAPI.get('/api/pricechange/:exchangecode/:symbol', function(req, res) {
+clientAPI.get('/v1/pricechange/:exchangecode/:symbol', function(req, res) {
     if(exchangeCodes.includes(req.params.exchangecode)){
 		const query = {
 			exchange:req.params.exchangecode,
