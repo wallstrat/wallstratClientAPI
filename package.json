@@ -6,8 +6,8 @@
   "scripts": {
     "test": "concurrently \"mongod --config mongo.config\" \"nodemon dist/app/clientapi/clientAPI.js\" \"nodemon dist/test/test.js\"",
     "start": "concurrently \"mongod --config mongo.config\" \"tsc -w\" \"set UV_THREADPOOL_SIZE=13\" \"nodemon dist/app/clientapi/clientAPI.js\"",
-    "prod": "concurrently \"tsc -w\" \"set UV_THREADPOOL_SIZE=13\" \"nodemon dist/app/clientapi/clientAPI.js\""
-
+    "prod": "concurrently \"node dist/app/clientapi/clientAPI.js\"",
+    "build": "concurrently \"tsc -w \""
   },
   "devDependencies": {
     "@types/core-js": "^2.5.0",
